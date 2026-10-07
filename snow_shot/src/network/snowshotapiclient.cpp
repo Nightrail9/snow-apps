@@ -115,6 +115,41 @@ QByteArray imageConversionBody(const SnowShotImageConversionRequest& input) {
         .toJson(QJsonDocument::Compact);
 }
 
+QByteArray imageQuestionBody(const SnowShotImageQuestionRequest& input, bool supportsReasoning) {
+    const QByteArray webp =
+        SnowShotApiClient::encodeWebp(SnowShotApiClient::prepareImage(input.image));
+    if (webp.isEmpty() || input.messages.isEmpty() ||
+        input.messages.constLast().role != QStringLiteral("user")) {
+        return {};
+    }
+
+    QJsonArray messages;
+    for (qsizetype i = 0; i < input.messages.size(); ++i) {
+        const auto& message = input.messages.at(i);
+        if (i == input.messages.size() - 1) {
+            const QJsonArray content{
+                QJsonObject{{QStringLiteral("type"), QStringLiteral("text")},
+                            {QStringLiteral("text"), message.content}},
+                QJsonObject{
+                    {QStringLiteral("type"), QStringLiteral("image_url")},
+                    {QStringLiteral("image_url"),
+                     QJsonObject{{QStringLiteral("url"),
+                                  QStringLiteral("data:image/webp;base64,") +
+                                      QString::fromLatin1(webp.toBase64())}}}}};
+            messages.append(QJsonObject{{QStringLiteral("role"), message.role},
+                                        {QStringLiteral("content"), content}});
+        } else {
+            messages.append(QJsonObject{{QStringLiteral("role"), message.role},
+                                        {QStringLiteral("content"), message.content}});
+        }
+    }
+    return QJsonDocument(QJsonObject{{QStringLiteral("model"), input.model},
+                                     {QStringLiteral("messages"), messages},
+                                     {QStringLiteral("stream"), true},
+                                     {QStringLiteral("enable_thinking"), supportsReasoning}})
+        .toJson(QJsonDocument::Compact);
+}
+
 class SystemNetworkProxyFactory final : public QNetworkProxyFactory {
   public:
     QList<QNetworkProxy> queryProxy(const QNetworkProxyQuery& query) override {
@@ -230,7 +265,14 @@ std::optional<QString> qwenMtLanguage(const QString& language) {
 } // namespace
 
 struct SnowShotApiClient::Request {
-    enum class Kind { LatexExtract, TableExtract, ChatModels, Translation, ImageConversion };
+    enum class Kind {
+        LatexExtract,
+        TableExtract,
+        ChatModels,
+        Translation,
+        ImageConversion,
+        ImageQuestion
+    };
     explicit Request(Kind requestKind) : kind(requestKind) {
         elapsed.start();
     }
@@ -247,6 +289,8 @@ struct SnowShotApiClient::Request {
             return QStringLiteral("translation");
         case Kind::ImageConversion:
             return QStringLiteral("image_conversion");
+        case Kind::ImageQuestion:
+            return QStringLiteral("image_question");
         }
         Q_UNREACHABLE();
     }
@@ -280,6 +324,7 @@ struct SnowShotApiClient::Request {
     bool streamDone = false;
     bool streamFailed = false;
     bool imageConversion = false;
+    bool imageQuestion = false;
     bool hasContent = false;
     qsizetype receivedBytes = 0;
     QString model;
@@ -680,6 +725,17 @@ const QVector<SnowShotChatModel>& SnowShotApiClient::cachedChatModels() const {
     return m_availableModels;
 }
 
+QVector<SnowShotChatModel> SnowShotApiClient::configuredVisionModels() const {
+    QVector<SnowShotChatModel> result;
+    for (const auto& model : m_customModels) {
+        if (model.supportsVision) {
+            result.push_back({model.selectionId(), model.name, model.supportsReasoning,
+                              QStringLiteral("default"), true});
+        }
+    }
+    return result;
+}
+
 const snow_shot::CustomAiModelConfiguration*
 SnowShotApiClient::customModel(const QString& id) const {
     for (const auto& model : m_customModels) {
@@ -763,7 +819,7 @@ void SnowShotApiClient::setCustomModels(const snow_shot::CustomAiModels& models)
         for (const auto token : tokens) {
             const auto* request = m_requests.value(token);
             if (request != nullptr && request->model == id &&
-                (changed || request->imageConversion)) {
+                (changed || request->imageConversion || request->imageQuestion)) {
                 cancel(token);
             }
         }
@@ -1029,6 +1085,80 @@ SnowShotApiClient::RequestToken SnowShotApiClient::streamImageConversion(
     return token;
 }
 
+SnowShotApiClient::RequestToken SnowShotApiClient::streamImageQuestion(
+    const SnowShotImageQuestionRequest& input, QObject* receiver, TranslationDelta delta,
+    TranslationCompletion completion) {
+    const auto* custom = customModel(input.model);
+    if (custom == nullptr || !custom->supportsVision || receiver == nullptr || !delta ||
+        !completion || input.image.isNull() || input.messages.isEmpty() ||
+        input.messages.constLast().role != QStringLiteral("user")) {
+        return 0;
+    }
+    for (const auto& message : input.messages) {
+        if ((message.role != QStringLiteral("system") &&
+             message.role != QStringLiteral("user") &&
+             message.role != QStringLiteral("assistant")) ||
+            message.content.isNull()) {
+            return 0;
+        }
+    }
+
+    const RequestToken token = ++m_nextToken;
+    auto* state = new Request(Request::Kind::ImageQuestion);
+    state->custom = true;
+    state->endpoint = custom->baseUrl + QStringLiteral("/chat/completions");
+    state->apiKey = custom->apiKey.toUtf8();
+    state->receiver = receiver;
+    state->translationDelta = std::move(delta);
+    state->translationCompletion = std::move(completion);
+    state->imageQuestion = true;
+    state->model = input.model;
+    m_requests.insert(token, state);
+
+    auto* deadline = new QTimer(this);
+    deadline->setSingleShot(true);
+    state->timeout = deadline;
+    connect(deadline, &QTimer::timeout, this, [this, token]() {
+        SnowShotTranslationResult result;
+        result.error = tr("Image question timed out. Try a smaller screenshot.");
+        result.code = QStringLiteral("image_question_timeout");
+        finishTranslation(token, std::move(result));
+    });
+    deadline->start(kTranslationTimeoutMs);
+
+    const QPointer<SnowShotApiClient> guard(this);
+    auto effectiveInput = input;
+    effectiveInput.model = custom->model;
+    const bool supportsReasoning = custom->supportsReasoning;
+    QThreadPool::globalInstance()->start(
+        [guard, token, effectiveInput, supportsReasoning]() {
+            snow_shot::platform::applyApplicationQoSToCurrentThread();
+            const QByteArray body = imageQuestionBody(effectiveInput, supportsReasoning);
+            QMetaObject::invokeMethod(
+                QCoreApplication::instance(),
+                [guard, token, body]() {
+                    if (guard == nullptr || !guard->m_requests.contains(token)) {
+                        return;
+                    }
+                    if (body.isEmpty() || body.size() > kMaximumChatRequestBytes) {
+                        SnowShotTranslationResult result;
+                        result.error = body.isEmpty()
+                                           ? tr("The image could not be prepared for a question")
+                                           : tr("The image and conversation are too large");
+                        result.code = body.isEmpty() ? QStringLiteral("image_encoding_failed")
+                                                     : QStringLiteral("payload_too_large");
+                        guard->finishTranslation(token, std::move(result));
+                        return;
+                    }
+                    guard->submitChatStream(token, body);
+                },
+                Qt::QueuedConnection);
+        });
+    state->receiverDestroyed =
+        connect(receiver, &QObject::destroyed, this, [this, token]() { cancel(token); });
+    return token;
+}
+
 void SnowShotApiClient::submitChatStream(RequestToken token, QByteArray body) {
     auto* state = m_requests.value(token);
     if (!state)
@@ -1037,7 +1167,7 @@ void SnowShotApiClient::submitChatStream(RequestToken token, QByteArray body) {
         startChatStream(token, body);
         return;
     }
-    if (state->imageConversion && state->timeout)
+    if ((state->imageConversion || state->imageQuestion) && state->timeout)
         state->timeout->stop();
     state->pendingBody = std::move(body);
     m_customChatQueue.append(token);
@@ -1097,7 +1227,7 @@ void SnowShotApiClient::startChatStream(RequestToken token, const QByteArray& bo
     QNetworkReply* reply = networkAccessManager()->post(request, body);
     reply->setReadBufferSize(64 * 1024);
     state->reply = reply;
-    if (state->imageConversion && state->timeout)
+    if ((state->imageConversion || state->imageQuestion) && state->timeout)
         state->timeout->start(kTranslationTimeoutMs);
 
     const auto parseAvailable = [this, token]() {
@@ -1162,7 +1292,8 @@ void SnowShotApiClient::startChatStream(RequestToken token, const QByteArray& bo
                 result.error = problemDetail(object);
                 if (result.error.isEmpty()) {
                     result.error = current->imageConversion ? tr("Image conversion failed")
-                                                            : tr("Translation failed");
+                                  : current->imageQuestion ? tr("Image question failed")
+                                                           : tr("Translation failed");
                 }
                 result.code = object.value(QStringLiteral("code")).toVariant().toString();
                 finishTranslation(token, std::move(result));
@@ -1174,8 +1305,9 @@ void SnowShotApiClient::startChatStream(RequestToken token, const QByteArray& bo
             if (!document.isObject()) {
                 current->streamFailed = true;
                 SnowShotTranslationResult result;
-                result.error = current->imageConversion ? tr("Invalid model stream response")
-                                                        : tr("Invalid translation stream response");
+                result.error = (current->imageConversion || current->imageQuestion)
+                                   ? tr("Invalid model stream response")
+                                   : tr("Invalid translation stream response");
                 finishTranslation(token, std::move(result));
                 return;
             }
@@ -1244,9 +1376,13 @@ void SnowShotApiClient::startChatStream(RequestToken token, const QByteArray& bo
         } else if (!current->streamDone) {
             result.error = current->imageConversion
                                ? tr("Image conversion stream ended unexpectedly")
+                           : current->imageQuestion
+                               ? tr("Image question stream ended unexpectedly")
                                : tr("Translation stream ended unexpectedly");
-        } else if (current->imageConversion && !current->hasContent) {
-            result.error = tr("The model returned no content");
+        } else if ((current->imageConversion || current->imageQuestion) &&
+                   !current->hasContent) {
+            result.error = current->imageQuestion ? tr("The model returned no answer")
+                                                  : tr("The model returned no content");
         }
         const QPointer<QNetworkReply> replyGuard(reply);
         finishTranslation(token, std::move(result));

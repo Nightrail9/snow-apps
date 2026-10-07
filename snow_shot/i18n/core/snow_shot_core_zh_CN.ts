@@ -605,127 +605,151 @@ so every moment on screen can be expressed clearly and shared easily.</source>
     </context>
     <context>
         <name>SnowShotApiClient</name>
-        <message>
+<message>
             <source>Image conversion failed</source>
             <translation>图像转换失败</translation>
         </message>
-        <message>
+<message>
             <source>Image conversion is incomplete. Try a smaller area.</source>
             <translation>图像转换不完整，请尝试较小的区域。</translation>
         </message>
-        <message>
+<message>
             <source>Image conversion stream ended unexpectedly</source>
             <translation>图像转换流意外中断</translation>
         </message>
-        <message>
+<message>
             <source>Image conversion timed out. Try a smaller area.</source>
             <translation>图像转换超时，请尝试较小的区域。</translation>
         </message>
-        <message>
+<message>
+      <source>Image question failed</source>
+      <translation>图像问答失败</translation>
+    </message>
+<message>
+      <source>Image question stream ended unexpectedly</source>
+      <translation>图像问答响应意外中断</translation>
+    </message>
+<message>
+      <source>Image question timed out. Try a smaller screenshot.</source>
+      <translation>图像问答超时，请尝试缩小截图区域。</translation>
+    </message>
+<message>
             <source>Invalid LaTeX recognition response</source>
             <translation>无效的 LaTeX 识别响应</translation>
         </message>
-        <message>
+<message>
             <source>Invalid model stream response</source>
             <translation>模型流式响应无效</translation>
         </message>
-        <message>
+<message>
             <source>Invalid table recognition response</source>
             <translation>表格识别响应无效</translation>
         </message>
-        <message>
+<message>
             <source>Invalid translation service response</source>
             <translation>无效的翻译服务响应</translation>
         </message>
-        <message>
+<message>
             <source>Invalid translation stream response</source>
             <translation>无效的翻译流响应</translation>
         </message>
-        <message>
+<message>
             <source>LaTeX recognition failed</source>
             <translation>LaTeX 识别失败</translation>
         </message>
-        <message>
+<message>
             <source>LaTeX recognition request timed out</source>
             <translation>LaTeX 识别请求超时</translation>
         </message>
-        <message>
+<message>
             <source>LaTeX recognition response is too large</source>
             <translation>LaTeX 识别响应过大</translation>
         </message>
-        <message>
+<message>
             <source>LaTeX recognition returned no formula</source>
             <translation>LaTeX 识别未返回公式</translation>
         </message>
-        <message>
+<message>
             <source>No translation services are available</source>
             <translation>没有可用的翻译服务</translation>
         </message>
-        <message>
+<message>
             <source>Table recognition failed</source>
             <translation>表格识别失败</translation>
         </message>
-        <message>
+<message>
             <source>Table recognition request timed out</source>
             <translation>表格识别请求超时</translation>
         </message>
-        <message>
+<message>
             <source>Table recognition response is too large</source>
             <translation>表格识别响应过大</translation>
         </message>
-        <message>
+<message>
             <source>Table recognition returned no table</source>
             <translation>表格识别未返回表格</translation>
         </message>
-        <message>
+<message>
+      <source>The image and conversation are too large</source>
+      <translation>图像和对话内容过大</translation>
+    </message>
+<message>
+      <source>The image could not be prepared for a question</source>
+      <translation>无法准备问答所需的图像</translation>
+    </message>
+<message>
             <source>The image could not be prepared for conversion</source>
             <translation>无法准备待转换的图像</translation>
         </message>
-        <message>
+<message>
             <source>The image is too large to convert. Select a smaller area.</source>
             <translation>图像过大，无法转换。请选择较小的区域。</translation>
         </message>
-        <message>
+<message>
             <source>The model response is too large</source>
             <translation>模型响应过大</translation>
         </message>
-        <message>
+<message>
+      <source>The model returned no answer</source>
+      <translation>模型未返回答案</translation>
+    </message>
+<message>
             <source>The model returned no content</source>
             <translation>模型未返回内容</translation>
         </message>
-        <message>
+<message>
             <source>The text is too large to translate.</source>
             <translation>文本过长，无法翻译。</translation>
         </message>
-        <message>
+<message>
             <source>The translation response is too large.</source>
             <translation>翻译响应过大。</translation>
         </message>
-        <message>
+<message>
             <source>This service does not support the selected language combination.</source>
             <translation>此服务不支持所选语言组合。</translation>
         </message>
-        <message>
+<message>
             <source>Translation failed</source>
             <translation>翻译失败</translation>
         </message>
-        <message>
+<message>
             <source>Translation request timed out.</source>
             <translation>翻译请求超时。</translation>
         </message>
-        <message>
+<message>
             <source>Translation service request failed (HTTP %1, code %2).</source>
             <translation>翻译服务请求失败（HTTP %1，代码 %2）。</translation>
         </message>
-        <message>
+<message>
             <source>Translation service response is too large</source>
             <translation>翻译服务响应过大</translation>
         </message>
-        <message>
+<message>
             <source>Translation stream ended unexpectedly</source>
             <translation>翻译流意外结束</translation>
         </message>
-    </context>
+        </context>
     <context>
         <name>SystemTrayController</name>
         <message>

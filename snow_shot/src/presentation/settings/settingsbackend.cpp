@@ -429,6 +429,12 @@ QVariant BuiltInSettingsBackend::selectValue(SettingsSelectBinding binding) cons
 #else
         return {};
 #endif
+    case SettingsSelectBinding::ScreenshotQaPresentation:
+#if SNOW_SHOT_ENABLE_EXTENDED_FEATURES
+        return storage::ExtendedFeaturesSettings().screenshotQaPresentation();
+#else
+        return QStringLiteral("main_page");
+#endif
     case SettingsSelectBinding::AppFont:
         return styles::ThemeManager::instance().appFontFamily();
     case SettingsSelectBinding::Theme:
@@ -635,6 +641,12 @@ bool BuiltInSettingsBackend::applySelectValue(SettingsSelectBinding binding,
     case SettingsSelectBinding::TranslationLayoutProcessing:
 #if SNOW_SHOT_ENABLE_TEXT_TRANSLATION
         return storage::ScreenshotTranslationSettings().setLayoutProcessing(value.toString());
+#else
+        return false;
+#endif
+    case SettingsSelectBinding::ScreenshotQaPresentation:
+#if SNOW_SHOT_ENABLE_EXTENDED_FEATURES
+        return storage::ExtendedFeaturesSettings().setScreenshotQaPresentation(value.toString());
 #else
         return false;
 #endif

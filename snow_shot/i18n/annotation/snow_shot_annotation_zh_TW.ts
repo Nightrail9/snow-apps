@@ -108,6 +108,10 @@
             <translation>箭頭筆畫寬度 %1</translation>
         </message>
         <message>
+            <source>Ask AI about screenshot</source>
+            <translation>詢問 AI 關於螢幕擷取畫面</translation>
+        </message>
+        <message>
             <source>Auto Filter</source>
             <translation>自動濾鏡</translation>
         </message>

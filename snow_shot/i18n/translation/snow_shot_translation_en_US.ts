@@ -2,6 +2,72 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US" sourcelanguage="en_US">
     <context>
+    <name>ScreenshotQuestionAnswerSession</name>
+    <message>
+        <source>Could not start the AI question request.</source>
+        <translation>Could not start the AI question request.</translation>
+    </message>
+    <message>
+        <source>The selected vision model is no longer available.</source>
+        <translation>The selected vision model is no longer available.</translation>
+    </message>
+    </context>
+    <context>
+    <name>ScreenshotQuestionAnswerWidget</name>
+    <message>
+        <source>Ask about this screenshot</source>
+        <translation>Ask about this screenshot</translation>
+    </message>
+    <message>
+        <source>Vision model</source>
+        <translation>Vision model</translation>
+    </message>
+    <message>
+        <source>The screenshot and your questions are sent to the selected model provider.</source>
+        <translation>The screenshot and your questions are sent to the selected model provider.</translation>
+    </message>
+    <message>
+        <source>Your conversation will appear here.</source>
+        <translation>Your conversation will appear here.</translation>
+    </message>
+    <message>
+        <source>Ask a question about the screenshot…</source>
+        <translation>Ask a question about the screenshot…</translation>
+    </message>
+    <message>
+        <source>Configure vision models</source>
+        <translation>Configure vision models</translation>
+    </message>
+    <message>
+        <source>New conversation</source>
+        <translation>New conversation</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Stop</translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation>Ask</translation>
+    </message>
+    <message>
+        <source>You</source>
+        <translation>You</translation>
+    </message>
+    <message>
+        <source>AI</source>
+        <translation>AI</translation>
+    </message>
+    <message>
+        <source>Take a screenshot and choose Ask AI to start a conversation.</source>
+        <translation>Take a screenshot and choose Ask AI to start a conversation.</translation>
+    </message>
+    <message>
+        <source>Add an OpenAI-compatible model with Vision Support enabled.</source>
+        <translation>Add an OpenAI-compatible model with Vision Support enabled.</translation>
+    </message>
+    </context>
+    <context>
         <name>ScreenshotTranslationSettingsDialog</name>
         <message>
             <source>Cancel</source>
@@ -184,6 +250,13 @@
             <source>Translation Models</source>
             <translation>Translation Models</translation>
         </message>
+    </context>
+    <context>
+    <name>snow_shot::presentation::StandaloneScreenshotQuestionAnswerWindow</name>
+    <message>
+        <source>Screenshot Q&amp;A</source>
+        <translation>Screenshot Q&amp;A</translation>
+    </message>
     </context>
     <context>
         <name>snow_shot::presentation::StandaloneTranslationWindow</name>

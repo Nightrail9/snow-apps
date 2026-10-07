@@ -2804,6 +2804,17 @@ QVector<SettingsPageDefinition> builtInPages() {
             SettingsPageKind::Translation,
         },
 #endif
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+        {
+            QStringLiteral("screenshot-question-answer"),
+            QStringLiteral("/tools/screenshot-question-answer"),
+            settingsText(QT_TRANSLATE_NOOP("SettingsCatalog", "Screenshot Q&A")),
+            settingsText(QT_TRANSLATE_NOOP("SettingsCatalog",
+                                           "Ask questions about screenshots with a vision model")),
+            {},
+            SettingsPageKind::ScreenshotQuestionAnswer,
+        },
+#endif
 
         {QStringLiteral("general"),
          QStringLiteral("/settings/general"),
@@ -3214,7 +3225,19 @@ QVector<SettingsPageDefinition> builtInPages() {
                    QT_TRANSLATE_NOOP("SettingsCatalog",
                                      "Open selected text translation in a standalone window."),
                    QStringLiteral("extended_features/standalone_translation_window"),
-                   SettingsSwitchBinding::StandaloneTranslationWindow)}},
+                   SettingsSwitchBinding::StandaloneTranslationWindow),
+               fixedSelectItem(
+                   QStringLiteral("extended-features.screenshot-qa-presentation"),
+                   QT_TRANSLATE_NOOP("SettingsCatalog", "Screenshot Q&A Opening Mode"),
+                   QT_TRANSLATE_NOOP("SettingsCatalog",
+                                     "Choose whether screenshot Q&A opens in the main window or "
+                                     "a standalone window."),
+                   QStringLiteral("extended_features/screenshot_qa_presentation"),
+                   SettingsSelectBinding::ScreenshotQaPresentation,
+                   {{QStringLiteral("main_page"),
+                     settingsText(QT_TRANSLATE_NOOP("SettingsCatalog", "Main Window Page"))},
+                    {QStringLiteral("standalone_window"),
+                     settingsText(QT_TRANSLATE_NOOP("SettingsCatalog", "Standalone Window"))}})}},
 #endif
 
              {QStringLiteral("text-recognition"),
@@ -3695,6 +3718,12 @@ QVector<SettingsNavigationNode> builtInNavigation() {
     translation.iconFactory = []() { return outlined_icons::Translation(); };
 
 #endif
+    SettingsNavigationPageDefinition screenshotQuestionAnswer;
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+    screenshotQuestionAnswer.id = QStringLiteral("nav.screenshot-question-answer");
+    screenshotQuestionAnswer.pageId = QStringLiteral("screenshot-question-answer");
+    screenshotQuestionAnswer.iconFactory = []() { return outlined_icons::Message(); };
+#endif
     SettingsNavigationPageDefinition pinned;
     pinned.id = QStringLiteral("nav.pin-to-screen-management");
     pinned.pageId = QString::fromLatin1(PINNED_PAGE_ID);
@@ -3703,7 +3732,11 @@ QVector<SettingsNavigationNode> builtInNavigation() {
 #if SNOW_SHOT_ENABLE_TEXT_TRANSLATION
             translation,
 #endif
-            settingsGroup, about};
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+            screenshotQuestionAnswer,
+#endif
+            settingsGroup,
+            about};
 }
 
 QString locationText(const SettingsLocation& location) {

@@ -362,6 +362,11 @@ const QVector<ConfigurationSchemaEntry> kRawEntries = {
      ConfigurationValueKind::Boolean},
 #endif
 #if SNOW_SHOT_ENABLE_EXTENDED_FEATURES
+    {QStringLiteral("extended_features/screenshot_qa_presentation"), QStringLiteral("main_page"),
+     ConfigurationValueKind::String, std::nullopt,
+     {QStringLiteral("main_page"), QStringLiteral("standalone_window")}},
+#endif
+#if SNOW_SHOT_ENABLE_EXTENDED_FEATURES
     {QStringLiteral("extended_features/jump_to_translation_page"), false,
      ConfigurationValueKind::Boolean},
 #endif

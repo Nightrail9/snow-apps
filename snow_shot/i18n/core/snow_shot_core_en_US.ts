@@ -605,127 +605,151 @@ so every moment on screen can be expressed clearly and shared easily.</translati
     </context>
     <context>
         <name>SnowShotApiClient</name>
-        <message>
+<message>
             <source>Image conversion failed</source>
             <translation>Image conversion failed</translation>
         </message>
-        <message>
+<message>
             <source>Image conversion is incomplete. Try a smaller area.</source>
             <translation>Image conversion is incomplete. Try a smaller area.</translation>
         </message>
-        <message>
+<message>
             <source>Image conversion stream ended unexpectedly</source>
             <translation>Image conversion stream ended unexpectedly</translation>
         </message>
-        <message>
+<message>
             <source>Image conversion timed out. Try a smaller area.</source>
             <translation>Image conversion timed out. Try a smaller area.</translation>
         </message>
-        <message>
+<message>
+      <source>Image question failed</source>
+      <translation>Image question failed</translation>
+    </message>
+<message>
+      <source>Image question stream ended unexpectedly</source>
+      <translation>Image question stream ended unexpectedly</translation>
+    </message>
+<message>
+      <source>Image question timed out. Try a smaller screenshot.</source>
+      <translation>Image question timed out. Try a smaller screenshot.</translation>
+    </message>
+<message>
             <source>Invalid LaTeX recognition response</source>
             <translation>Invalid LaTeX recognition response</translation>
         </message>
-        <message>
+<message>
             <source>Invalid model stream response</source>
             <translation>Invalid model stream response</translation>
         </message>
-        <message>
+<message>
             <source>Invalid table recognition response</source>
             <translation>Invalid table recognition response</translation>
         </message>
-        <message>
+<message>
             <source>Invalid translation service response</source>
             <translation>Invalid translation service response</translation>
         </message>
-        <message>
+<message>
             <source>Invalid translation stream response</source>
             <translation>Invalid translation stream response</translation>
         </message>
-        <message>
+<message>
             <source>LaTeX recognition failed</source>
             <translation>LaTeX recognition failed</translation>
         </message>
-        <message>
+<message>
             <source>LaTeX recognition request timed out</source>
             <translation>LaTeX recognition request timed out</translation>
         </message>
-        <message>
+<message>
             <source>LaTeX recognition response is too large</source>
             <translation>LaTeX recognition response is too large</translation>
         </message>
-        <message>
+<message>
             <source>LaTeX recognition returned no formula</source>
             <translation>LaTeX recognition returned no formula</translation>
         </message>
-        <message>
+<message>
             <source>No translation services are available</source>
             <translation>No translation services are available</translation>
         </message>
-        <message>
+<message>
             <source>Table recognition failed</source>
             <translation>Table recognition failed</translation>
         </message>
-        <message>
+<message>
             <source>Table recognition request timed out</source>
             <translation>Table recognition request timed out</translation>
         </message>
-        <message>
+<message>
             <source>Table recognition response is too large</source>
             <translation>Table recognition response is too large</translation>
         </message>
-        <message>
+<message>
             <source>Table recognition returned no table</source>
             <translation>Table recognition returned no table</translation>
         </message>
-        <message>
+<message>
+      <source>The image and conversation are too large</source>
+      <translation>The image and conversation are too large</translation>
+    </message>
+<message>
+      <source>The image could not be prepared for a question</source>
+      <translation>The image could not be prepared for a question</translation>
+    </message>
+<message>
             <source>The image could not be prepared for conversion</source>
             <translation>The image could not be prepared for conversion</translation>
         </message>
-        <message>
+<message>
             <source>The image is too large to convert. Select a smaller area.</source>
             <translation>The image is too large to convert. Select a smaller area.</translation>
         </message>
-        <message>
+<message>
             <source>The model response is too large</source>
             <translation>The model response is too large</translation>
         </message>
-        <message>
+<message>
+      <source>The model returned no answer</source>
+      <translation>The model returned no answer</translation>
+    </message>
+<message>
             <source>The model returned no content</source>
             <translation>The model returned no content</translation>
         </message>
-        <message>
+<message>
             <source>The text is too large to translate.</source>
             <translation>The text is too large to translate.</translation>
         </message>
-        <message>
+<message>
             <source>The translation response is too large.</source>
             <translation>The translation response is too large.</translation>
         </message>
-        <message>
+<message>
             <source>This service does not support the selected language combination.</source>
             <translation>This service does not support the selected language combination.</translation>
         </message>
-        <message>
+<message>
             <source>Translation failed</source>
             <translation>Translation failed</translation>
         </message>
-        <message>
+<message>
             <source>Translation request timed out.</source>
             <translation>Translation request timed out.</translation>
         </message>
-        <message>
+<message>
             <source>Translation service request failed (HTTP %1, code %2).</source>
             <translation>Translation service request failed (HTTP %1, code %2).</translation>
         </message>
-        <message>
+<message>
             <source>Translation service response is too large</source>
             <translation>Translation service response is too large</translation>
         </message>
-        <message>
+<message>
             <source>Translation stream ended unexpectedly</source>
             <translation>Translation stream ended unexpectedly</translation>
         </message>
-    </context>
+        </context>
     <context>
         <name>SystemTrayController</name>
         <message>

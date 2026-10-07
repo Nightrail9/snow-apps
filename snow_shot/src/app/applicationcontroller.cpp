@@ -38,6 +38,10 @@
 #include "snow_shot/presentation/selectedtexttranslationcontroller.h"
 #endif
 #include "snow_shot/presentation/screenshotocrrecognitionservice.h"
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+#include "snow_shot/presentation/components/standalonescreenshotquestionanswerwindow.h"
+#include "snow_shot/presentation/screenshotquestionanswersession.h"
+#endif
 #include "snow_shot/presentation/screenshotpinnedwindow.h"
 #include "snow_shot/presentation/screenrecordingfolder.h"
 #include "snow_shot/presentation/systemtraycontroller.h"
@@ -288,12 +292,14 @@ class ApplicationController::Impl {
         if (!applicationStorage.isInitialized()) {
             static_cast<void>(applicationStorage.initialize());
         }
-#if SNOW_SHOT_ENABLE_TEXT_TRANSLATION
+#if SNOW_SHOT_ENABLE_TEXT_TRANSLATION || SNOW_SHOT_ENABLE_API_CONFIGURATION
         translationClient =
             std::make_unique<SnowShotApiClient>(SnowShotApiClient::configuredBaseUrl(
                 applicationStorage.configuration()
                     .value(QStringLiteral("api_configuration/server_url"))
                     .toString()));
+#endif
+#if SNOW_SHOT_ENABLE_TEXT_TRANSLATION
         translationService = &translation::TranslationService::forClient(
             *translationClient, applicationStorage.configuration(),
             presentation::LanguageManager::instance().currentLocale());
@@ -1388,6 +1394,13 @@ class ApplicationController::Impl {
             QObject::connect(screenshotController.get(),
                              &ScreenshotController::showMainWindowRequested, &q,
                              [this]() { showMainWindow(); });
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+            QObject::connect(screenshotController.get(),
+                             &ScreenshotController::screenshotQuestionAnswerRequested, &q,
+                             [this](const QImage& image) {
+                                 presentScreenshotQuestionAnswer(image);
+                             });
+#endif
 #if SNOW_SHOT_ENABLE_TEXT_TRANSLATION
             QObject::connect(screenshotController.get(),
                              &ScreenshotController::translationPageRequested, &q,
@@ -1471,6 +1484,9 @@ class ApplicationController::Impl {
         if (mainWindow == nullptr) {
             ensureSettingsRuntime();
             mainWindow = new MainWindow(*settingsRegistry, *runtimeSession, nullptr, apiClient());
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+            mainWindow->setScreenshotQuestionAnswerSession(screenshotQuestionAnswerSession());
+#endif
             QObject::connect(mainWindow, &QObject::destroyed, &q,
                              [this]() { mainWindow = nullptr; });
             QObject::connect(mainWindow, &MainWindow::screenshotRequested, &q, [this]() {
@@ -1883,19 +1899,63 @@ class ApplicationController::Impl {
     std::unique_ptr<presentation::settings::BuiltInSettingsBackend> settingsBackend;
     std::unique_ptr<presentation::settings::SettingsRuntimeSession> runtimeSession;
     SnowShotApiClient* apiClient() const {
-#if SNOW_SHOT_ENABLE_TEXT_TRANSLATION
+#if SNOW_SHOT_ENABLE_TEXT_TRANSLATION || SNOW_SHOT_ENABLE_API_CONFIGURATION
         return translationClient.get();
 #else
         return nullptr;
 #endif
     }
-#if SNOW_SHOT_ENABLE_TEXT_TRANSLATION
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+    ScreenshotQuestionAnswerSession* screenshotQuestionAnswerSession() {
+        if (questionAnswerSession == nullptr)
+            questionAnswerSession = std::make_unique<ScreenshotQuestionAnswerSession>(apiClient());
+        return questionAnswerSession.get();
+    }
+
+    StandaloneScreenshotQuestionAnswerWindow& standaloneQuestionAnswerWindow() {
+        if (questionAnswerWindow == nullptr) {
+            questionAnswerWindow = std::make_unique<StandaloneScreenshotQuestionAnswerWindow>(
+                screenshotQuestionAnswerSession());
+            QObject::connect(questionAnswerWindow.get(),
+                             &StandaloneScreenshotQuestionAnswerWindow::modelSettingsRequested, &q,
+                             [this]() {
+                                 MainWindow& window = ensureMainWindow();
+                                 window.showSettingsLocation(QStringLiteral("connections-services"),
+                                                             QStringLiteral("ai-model"));
+                                 window.showAndActivate();
+                             });
+        }
+        return *questionAnswerWindow;
+    }
+
+    void presentScreenshotQuestionAnswer(QImage image) {
+        if (image.isNull())
+            return;
+        bool standalone = false;
+#if SNOW_SHOT_ENABLE_EXTENDED_FEATURES
+        standalone = storage::ExtendedFeaturesSettings().screenshotQaPresentation() ==
+                     QStringLiteral("standalone_window");
+#endif
+        if (standalone) {
+            standaloneQuestionAnswerWindow().showScreenshot(std::move(image));
+            return;
+        }
+        MainWindow& window = ensureMainWindow();
+        window.setScreenshotQuestionAnswerSession(screenshotQuestionAnswerSession());
+        window.showScreenshotQuestionAnswer(std::move(image));
+    }
+#endif
+#if SNOW_SHOT_ENABLE_TEXT_TRANSLATION || SNOW_SHOT_ENABLE_API_CONFIGURATION
     std::unique_ptr<SnowShotApiClient> translationClient;
 #endif
 #if SNOW_SHOT_ENABLE_TEXT_TRANSLATION
     translation::TranslationService* translationService = nullptr;
 #endif
     std::unique_ptr<ScreenshotOcrRecognitionService> ocrRecognition;
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+    std::unique_ptr<ScreenshotQuestionAnswerSession> questionAnswerSession;
+    std::unique_ptr<StandaloneScreenshotQuestionAnswerWindow> questionAnswerWindow;
+#endif
     std::unique_ptr<ScreenshotController> screenshotController;
     std::unique_ptr<presentation::GlobalCanvasController> globalCanvasController;
     std::unique_ptr<mcp::ScreenshotMcpServer> mcpServer;

@@ -426,6 +426,7 @@ struct ScreenshotController::Impl final : public ScreenshotToolbarCommandSink,
     void setMarkdownTool() override;
     void setHtmlTool() override;
     void openImageConversionSettings() override;
+    void askQuestionAboutScreenshot() override;
     void mergeTableSelection() override;
     void splitTableSelection() override;
     void resetTable() override;
@@ -2756,6 +2757,21 @@ void ScreenshotController::Impl::openImageConversionSettings() {
     if (m_ocrController != nullptr) {
         m_ocrController->openImageConversionSettings();
     }
+#endif
+}
+
+void ScreenshotController::Impl::askQuestionAboutScreenshot() {
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+    if (!m_selection.hasPixelSelection() || !ensureExportFeature())
+        return;
+    auto artifact = owner.mcpExportArtifact(1.0);
+    if (!artifact)
+        return;
+    const QPointer<ScreenshotController> guard(&owner);
+    static_cast<void>(artifact->requestImage(&owner, [guard, artifact](ScreenshotExportImageResult result) {
+        if (guard && result.succeeded())
+            emit guard->screenshotQuestionAnswerRequested(result.image);
+    }));
 #endif
 }
 

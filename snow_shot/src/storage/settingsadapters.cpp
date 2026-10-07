@@ -771,6 +771,26 @@ bool ExtendedFeaturesSettings::setStandaloneTranslationWindow(bool enabled) cons
 #endif
 
 #if SNOW_SHOT_ENABLE_EXTENDED_FEATURES
+QString ExtendedFeaturesSettings::screenshotQaPresentation() const {
+    const QString value = cache()
+                              .value(QStringLiteral("extended_features/screenshot_qa_presentation"))
+                              .toString();
+    return value == QStringLiteral("standalone_window") ? value : QStringLiteral("main_page");
+}
+#endif
+
+#if SNOW_SHOT_ENABLE_EXTENDED_FEATURES
+bool ExtendedFeaturesSettings::setScreenshotQaPresentation(const QString& presentation) const {
+    if (presentation != QStringLiteral("main_page") &&
+        presentation != QStringLiteral("standalone_window")) {
+        return false;
+    }
+    return cache().setValue(QStringLiteral("extended_features/screenshot_qa_presentation"),
+                            presentation);
+}
+#endif
+
+#if SNOW_SHOT_ENABLE_EXTENDED_FEATURES
 bool ExtendedFeaturesSettings::setTranslationPageEnabled(bool enabled) const {
     return cache().setValue(QStringLiteral("extended_features/translation_page_enabled"), enabled);
 }

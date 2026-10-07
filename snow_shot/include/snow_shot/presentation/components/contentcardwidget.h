@@ -5,6 +5,7 @@
 #include "snow_shot/presentation/styles/themecolorscheme.h"
 
 #include <QFrame>
+#include <QImage>
 #include <QPointer>
 #include <QBrush>
 
@@ -16,6 +17,7 @@ class QPaintEvent;
 class QStackedWidget;
 class SettingsPageWidget;
 class ScreenshotHistoryPageWidget;
+class ScreenshotQuestionAnswerSession;
 class QWidget;
 namespace snow_shot::presentation::settings {
 class SettingsRuntimeSession;
@@ -28,6 +30,7 @@ class ContentCardWidget final : public QFrame {
     ContentCardWidget(const snow_shot::presentation::settings::SettingsRegistry& registry,
                       snow_shot::presentation::settings::SettingsRuntimeSession& runtimeSession,
                       QWidget* parent = nullptr, SnowShotApiClient* translationClient = nullptr);
+    void setScreenshotQuestionAnswerSession(ScreenshotQuestionAnswerSession* session);
     ~ContentCardWidget() override;
 
     [[nodiscard]] QString currentRoute() const;
@@ -40,6 +43,7 @@ class ContentCardWidget final : public QFrame {
     void showGeneralSettings();
     void showScreenshotSettings();
     void showTranslation(const QString& text);
+    void showScreenshotQuestionAnswer(QImage image);
     void applyTheme(const snow_shot::presentation::styles::ThemeColorScheme& scheme);
     void setSkinMaskOpacity(qreal opacity);
     void retranslateUi();
@@ -55,6 +59,7 @@ class ContentCardWidget final : public QFrame {
     globalMouseDragRequested(snow_shot::presentation::settings::SettingsGlobalMouseAction action);
     void screenshotHistoryEditRequested(const QString& recordId);
     void screenshotHistoryPinRequested(const QString& recordId);
+    void screenshotQuestionAnswerModelSettingsRequested();
 
   protected:
     void paintEvent(QPaintEvent* event) override;
@@ -70,6 +75,7 @@ class ContentCardWidget final : public QFrame {
     const snow_shot::presentation::settings::SettingsRegistry& m_registry;
     snow_shot::presentation::settings::SettingsRuntimeSession& m_runtimeSession;
     SnowShotApiClient* m_translationClient = nullptr;
+    QPointer<ScreenshotQuestionAnswerSession> m_questionAnswerSession;
     QStackedWidget* m_stack = nullptr;
     QPointer<QWidget> m_activePage;
     QString m_activePageId;

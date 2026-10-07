@@ -4412,6 +4412,7 @@ void ScreenshotToolPalette::createMainToolbar(const Options& options) {
     const bool hasEditingTools = addMainToolButtons(options, panelLayout);
     const bool hasSecondaryTools =
         options.showScreenRecordButton || options.showOcrTool ||
+        (options.showScreenshotQuestionAnswerTool && snow_shot::app::edition::apiConfiguration) ||
         (options.showTextTranslationTool && snow_shot::app::edition::textTranslation) ||
         (options.showTableTool && snow_shot::app::edition::tableRecognition) ||
         (options.showQrTool && snow_shot::app::edition::qrRecognition) ||
@@ -6067,6 +6068,17 @@ bool ScreenshotToolPalette::addMainSecondaryButtons(const Options& options, QBox
         addButton(m_ocrButton);
         connect(m_ocrButton, &adqt::widgets::AdButton::clicked, this,
                 [this]() { activateActionTool(QStringLiteral("text-recognition")); });
+    }
+
+    if (options.showScreenshotQuestionAnswerTool && snow_shot::app::edition::apiConfiguration) {
+        auto* button = addToolButton(QT_TRANSLATE_NOOP("ScreenshotToolPalette", "Ask AI about screenshot"),
+                                     adqt::icons::antd::outlined::Message());
+        button->setObjectName(QStringLiteral("screenshotQuestionAnswerButton"));
+        button->setBusyIndicatorPresentation(
+            adqt::widgets::AdButton::BusyIndicatorPresentation::IsolatedSurface);
+        addButton(button);
+        connect(button, &adqt::widgets::AdButton::clicked, this,
+                &ScreenshotToolPalette::screenshotQuestionAnswerRequested);
     }
 
     if ((options.showTextTranslationTool && snow_shot::app::edition::textTranslation)) {

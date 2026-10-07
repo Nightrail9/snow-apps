@@ -92,6 +92,17 @@ struct SnowShotImageConversionRequest {
 
 using SnowShotImageConversionResult = SnowShotTranslationResult;
 
+struct SnowShotChatMessage {
+    QString role;
+    QString content;
+};
+
+struct SnowShotImageQuestionRequest {
+    QString model;
+    QImage image;
+    QVector<SnowShotChatMessage> messages;
+};
+
 #if SNOW_SHOT_ENABLE_TEXT_TRANSLATION || SNOW_SHOT_ENABLE_TABLE_RECOGNITION ||                     \
     SNOW_SHOT_ENABLE_LATEX_RECOGNITION || SNOW_SHOT_ENABLE_IMAGE_CONVERSION ||                     \
     SNOW_SHOT_ENABLE_API_CONFIGURATION
@@ -118,6 +129,7 @@ class SnowShotApiClient final : public QObject {
     [[nodiscard]] bool usesSystemProxy() const;
     void setUseSystemProxy(bool enabled);
     [[nodiscard]] const QVector<SnowShotChatModel>& cachedChatModels() const;
+    [[nodiscard]] QVector<SnowShotChatModel> configuredVisionModels() const;
     [[nodiscard]] QString cachedChatModelsLocale() const {
         return m_cachedChatModelsLocale;
     }
@@ -134,6 +146,9 @@ class SnowShotApiClient final : public QObject {
     streamImageConversion(const SnowShotImageConversionRequest& request, QObject* receiver,
                           TranslationDelta delta,
                           std::function<void(SnowShotImageConversionResult)> completion);
+    [[nodiscard]] RequestToken
+    streamImageQuestion(const SnowShotImageQuestionRequest& request, QObject* receiver,
+                        TranslationDelta delta, TranslationCompletion completion);
     void cancel(RequestToken token);
     void setTextTranslationConfigurations(const snow_shot::TextTranslationConfigurations& values);
     [[nodiscard]] bool isTextTranslation(const QString& id) const;

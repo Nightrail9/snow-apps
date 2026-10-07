@@ -1210,6 +1210,96 @@ void customModelsUseIndependentOpenAiConnections() {
             "deleted custom ID never routes to builtin service");
 }
 
+void imageQuestionStreamsConversationWithScreenshot() {
+    QTcpServer server;
+    require(server.listen(QHostAddress::LocalHost), "image question server listens");
+    SnowShotApiClient client(QStringLiteral(""));
+    snow_shot::CustomAiModelConfiguration model{
+        QUuid::createUuid().toString(QUuid::WithoutBraces), QStringLiteral("Vision"),
+        QStringLiteral("http://127.0.0.1:%1/v1").arg(server.serverPort()), QStringLiteral("secret"),
+        QStringLiteral("vision-model"), true, true, 2};
+    client.setCustomModels({model});
+    const auto options = client.configuredVisionModels();
+    require(options.size() == 1 && options.first().id == model.selectionId() &&
+                options.first().name == model.name && options.first().supportsVision,
+            "configured vision model options are exposed to the question UI");
+
+    QImage image(40, 24, QImage::Format_RGBA8888);
+    image.fill(Qt::white);
+    SnowShotImageQuestionRequest input;
+    input.model = model.selectionId();
+    input.image = image;
+    input.messages = {{QStringLiteral("system"), QStringLiteral("Answer based on the screenshot.")},
+                      {QStringLiteral("user"), QStringLiteral("What is shown?")},
+                      {QStringLiteral("assistant"), QStringLiteral("A settings page.")},
+                      {QStringLiteral("user"), QStringLiteral("Read the selected value.")}};
+    const QByteArray stream =
+        "data: {\"choices\":[{\"delta\":{\"content\":\"Small V6\"}}]}\n\n"
+        "data: [DONE]\n\n";
+    bool finished = false;
+    QString answer;
+    SnowShotTranslationResult result;
+    QEventLoop loop;
+    const auto token = client.streamImageQuestion(
+        input, &client, [&](const QString& delta) { answer += delta; },
+        [&](SnowShotTranslationResult value) {
+            result = value;
+            finished = true;
+            loop.quit();
+        });
+    require(token != 0, "image question starts for a configured vision model");
+    const auto request = waitForHttpRequest(
+        server, QByteArray("HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\nContent-Length: ") +
+                     QByteArray::number(stream.size()) + "\r\nConnection: close\r\n\r\n" + stream);
+    if (!finished) {
+        QTimer::singleShot(5000, &loop, &QEventLoop::quit);
+        loop.exec();
+    }
+    require(finished && result.succeeded() && answer == QStringLiteral("Small V6"),
+            "image question streams the answer and completes successfully");
+    require(request.startsWith("POST /v1/chat/completions ") &&
+                request.contains("Authorization: Bearer secret"),
+            "image question uses the configured OpenAI-compatible endpoint and key");
+    const QJsonObject body =
+        QJsonDocument::fromJson(request.mid(request.indexOf("\r\n\r\n") + 4)).object();
+    const auto messages = body.value(QStringLiteral("messages")).toArray();
+    require(body.value(QStringLiteral("model")) == QStringLiteral("vision-model") &&
+                body.value(QStringLiteral("stream")).toBool() &&
+                body.value(QStringLiteral("enable_thinking")).toBool() && messages.size() == 4,
+            "image question preserves conversation and custom model options");
+    require(messages.at(0).toObject().value(QStringLiteral("content")).toString() ==
+                    QStringLiteral("Answer based on the screenshot.") &&
+                messages.at(1).toObject().value(QStringLiteral("content")).toString() ==
+                    QStringLiteral("What is shown?") &&
+                messages.at(2).toObject().value(QStringLiteral("content")).toString() ==
+                    QStringLiteral("A settings page."),
+            "previous conversation turns are sent unchanged");
+    const auto latest = messages.last().toObject();
+    const auto content = latest.value(QStringLiteral("content")).toArray();
+    const QString imageUrl = content.at(1)
+                                 .toObject()
+                                 .value(QStringLiteral("image_url"))
+                                 .toObject()
+                                 .value(QStringLiteral("url"))
+                                 .toString();
+    require(latest.value(QStringLiteral("role")) == QStringLiteral("user") &&
+                content.first().toObject().value(QStringLiteral("text")).toString() ==
+                    QStringLiteral("Read the selected value.") &&
+                imageUrl.startsWith(QStringLiteral("data:image/webp;base64,")),
+            "screenshot accompanies the latest user message as a WebP data URL");
+
+    model.supportsVision = false;
+    client.setCustomModels({model});
+    require(client.configuredVisionModels().isEmpty() &&
+                client.streamImageQuestion(input, &client, [](const QString&) {}, [](auto) {}) == 0,
+            "image question rejects custom models without vision support");
+    model.supportsVision = true;
+    client.setCustomModels({model});
+    input.messages.last().role = QStringLiteral("assistant");
+    require(client.streamImageQuestion(input, &client, [](const QString&) {}, [](auto) {}) == 0,
+            "image question requires a latest user turn");
+}
+
 void latexUploadDimensions() {
     struct Scenario {
         QSize source;
@@ -1476,5 +1566,6 @@ int main(int argc, char** argv) {
     translationPromptPreservesEditorContract();
     failedRequestsIdentifyTheirKindWithoutContent();
     imageConversionUsesVisionAndRejectsIncompleteStreams();
+    imageQuestionStreamsConversationWithScreenshot();
     return 0;
 }

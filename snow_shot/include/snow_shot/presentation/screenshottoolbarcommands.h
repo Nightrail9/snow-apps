@@ -77,6 +77,7 @@ class ScreenshotToolbarCommandSink {
     virtual void setMarkdownTool() {}
     virtual void setHtmlTool() {}
     virtual void openImageConversionSettings() {}
+    virtual void askQuestionAboutScreenshot() {}
     virtual void mergeTableSelection() {}
     virtual void splitTableSelection() {}
     virtual void resetTable() {}

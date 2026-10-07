@@ -35,6 +35,7 @@ ScreenshotToolPalette::Options screenshotToolbarOptions() {
     options.showTextTool = true;
     options.showSerialNumberTool = true;
     options.showOcrTool = true;
+    options.showScreenshotQuestionAnswerTool = snow_shot::app::edition::apiConfiguration;
     options.showTextTranslationTool = true;
     options.showTableTool = true;
     options.showQrTool = true;
@@ -179,6 +180,8 @@ void ScreenshotToolbarWindow::initializePalette() {
 }
 
 void ScreenshotToolbarWindow::connectToolCommands(ScreenshotToolPalette& toolPalette) {
+    connect(&toolPalette, &ScreenshotToolPalette::screenshotQuestionAnswerRequested, this,
+            [this]() { m_commands.askQuestionAboutScreenshot(); });
     connect(&toolPalette, &ScreenshotToolPalette::moveRequested, this, [this]() {
         m_commands.setMoveTool();
         setActiveToolAndReposition(ScreenshotToolPalette::Tool::Move);

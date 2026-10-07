@@ -3817,6 +3817,22 @@
             <translation>Stack screenshot tools</translation>
         </message>
         <message>
+            <source>Screenshot Q&amp;A Opening Mode</source>
+            <translation>Screenshot Q&amp;A Opening Mode</translation>
+        </message>
+        <message>
+            <source>Choose whether screenshot Q&amp;A opens in the main window or a standalone window.</source>
+            <translation>Choose whether screenshot Q&amp;A opens in the main window or a standalone window.</translation>
+        </message>
+        <message>
+            <source>Main Window Page</source>
+            <translation>Main Window Page</translation>
+        </message>
+        <message>
+            <source>Standalone Window</source>
+            <translation>Standalone Window</translation>
+        </message>
+        <message>
             <source>Standalone Translation Window</source>
             <translation>Standalone Translation Window</translation>
         </message>
@@ -4252,7 +4268,15 @@
             <source>Zip archives (*.zip);;All files (*.*)</source>
             <translation>Zip archives (*.zip);;All files (*.*)</translation>
         </message>
-    </context>
+            <message>
+            <source>Screenshot Q&amp;A</source>
+            <translation>Screenshot Q&amp;A</translation>
+        </message>
+        <message>
+            <source>Ask questions about screenshots with a vision model</source>
+            <translation>Ask questions about screenshots with a vision model</translation>
+        </message>
+</context>
     <context>
         <name>SettingsPageWidget</name>
         <message>

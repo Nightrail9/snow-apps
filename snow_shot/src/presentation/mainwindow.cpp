@@ -8,6 +8,9 @@
 #include "snow_shot/platform/macos/applicationactivation.h"
 #endif
 #include "snow_shot/presentation/components/contentcardwidget.h"
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+#include "snow_shot/presentation/screenshotquestionanswersession.h"
+#endif
 #include "snow_shot/presentation/components/maincontentheaderwidget.h"
 #include "snow_shot/presentation/components/sidebarwidget.h"
 #include "snow_shot/presentation/components/titlebarwidget.h"
@@ -276,6 +279,9 @@ void MainWindow::buildUi() {
     connect(m_contentCard, &ContentCardWidget::screenshotRequested, this,
             &MainWindow::screenshotRequested);
     connect(m_contentCard, &ContentCardWidget::closeWindowRequested, this, &QWidget::close);
+    connect(m_contentCard, &ContentCardWidget::screenshotQuestionAnswerModelSettingsRequested, this,
+            [this]() { showSettingsLocation(QStringLiteral("connections-services"),
+                                           QStringLiteral("ai-model")); });
     connect(m_contentCard, &ContentCardWidget::quickActionRequested, this,
             &MainWindow::quickActionRequested);
     connect(m_contentCard, &ContentCardWidget::globalMouseDragRequested, this,
@@ -415,6 +421,22 @@ void MainWindow::showTranslation(const QString& text) {
         request.key = QStringLiteral("main-translation-empty-selection");
         request.content = tr("Failed to retrieve selected text");
         adqt::widgets::AdMessageService::warning(std::move(request), this);
+    }
+}
+
+void MainWindow::setScreenshotQuestionAnswerSession(ScreenshotQuestionAnswerSession* session) {
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+    if (m_contentCard != nullptr)
+        m_contentCard->setScreenshotQuestionAnswerSession(session);
+#else
+    Q_UNUSED(session);
+#endif
+}
+
+void MainWindow::showScreenshotQuestionAnswer(QImage image) {
+    if (m_contentCard != nullptr) {
+        m_contentCard->showScreenshotQuestionAnswer(std::move(image));
+        showAndActivate();
     }
 }
 

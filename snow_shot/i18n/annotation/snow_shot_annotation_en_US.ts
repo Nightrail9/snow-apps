@@ -108,6 +108,10 @@
             <translation>Arrow stroke width %1</translation>
         </message>
         <message>
+            <source>Ask AI about screenshot</source>
+            <translation>Ask AI about screenshot</translation>
+        </message>
+        <message>
             <source>Auto Filter</source>
             <translation>Auto Filter</translation>
         </message>

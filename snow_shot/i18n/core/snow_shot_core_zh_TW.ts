@@ -605,127 +605,151 @@ so every moment on screen can be expressed clearly and shared easily.</source>
     </context>
     <context>
         <name>SnowShotApiClient</name>
-        <message>
+<message>
             <source>Image conversion failed</source>
             <translation>影像轉換失敗</translation>
         </message>
-        <message>
+<message>
             <source>Image conversion is incomplete. Try a smaller area.</source>
             <translation>影像轉換不完整，請嘗試較小的區域。</translation>
         </message>
-        <message>
+<message>
             <source>Image conversion stream ended unexpectedly</source>
             <translation>影像轉換串流意外中斷</translation>
         </message>
-        <message>
+<message>
             <source>Image conversion timed out. Try a smaller area.</source>
             <translation>影像轉換逾時，請嘗試較小的區域。</translation>
         </message>
-        <message>
+<message>
+      <source>Image question failed</source>
+      <translation>影像問答失敗</translation>
+    </message>
+<message>
+      <source>Image question stream ended unexpectedly</source>
+      <translation>影像問答回應意外中斷</translation>
+    </message>
+<message>
+      <source>Image question timed out. Try a smaller screenshot.</source>
+      <translation>影像問答逾時，請嘗試縮小螢幕擷取範圍。</translation>
+    </message>
+<message>
             <source>Invalid LaTeX recognition response</source>
             <translation>無效的 LaTeX 辨識回應</translation>
         </message>
-        <message>
+<message>
             <source>Invalid model stream response</source>
             <translation>模型串流回應無效</translation>
         </message>
-        <message>
+<message>
             <source>Invalid table recognition response</source>
             <translation>表格辨識回應無效</translation>
         </message>
-        <message>
+<message>
             <source>Invalid translation service response</source>
             <translation>無效的翻譯服務回應</translation>
         </message>
-        <message>
+<message>
             <source>Invalid translation stream response</source>
             <translation>無效的翻譯串流回應</translation>
         </message>
-        <message>
+<message>
             <source>LaTeX recognition failed</source>
             <translation>LaTeX 辨識失敗</translation>
         </message>
-        <message>
+<message>
             <source>LaTeX recognition request timed out</source>
             <translation>LaTeX 辨識請求逾時</translation>
         </message>
-        <message>
+<message>
             <source>LaTeX recognition response is too large</source>
             <translation>LaTeX 辨識回應過大</translation>
         </message>
-        <message>
+<message>
             <source>LaTeX recognition returned no formula</source>
             <translation>LaTeX 辨識未傳回公式</translation>
         </message>
-        <message>
+<message>
             <source>No translation services are available</source>
             <translation>沒有可用的翻譯服務</translation>
         </message>
-        <message>
+<message>
             <source>Table recognition failed</source>
             <translation>表格辨識失敗</translation>
         </message>
-        <message>
+<message>
             <source>Table recognition request timed out</source>
             <translation>表格辨識請求逾時</translation>
         </message>
-        <message>
+<message>
             <source>Table recognition response is too large</source>
             <translation>表格辨識回應過大</translation>
         </message>
-        <message>
+<message>
             <source>Table recognition returned no table</source>
             <translation>表格辨識未傳回表格</translation>
         </message>
-        <message>
+<message>
+      <source>The image and conversation are too large</source>
+      <translation>影像和對話內容過大</translation>
+    </message>
+<message>
+      <source>The image could not be prepared for a question</source>
+      <translation>無法準備問答所需的影像</translation>
+    </message>
+<message>
             <source>The image could not be prepared for conversion</source>
             <translation>無法準備要轉換的影像</translation>
         </message>
-        <message>
+<message>
             <source>The image is too large to convert. Select a smaller area.</source>
             <translation>影像過大，無法轉換。請選取較小的區域。</translation>
         </message>
-        <message>
+<message>
             <source>The model response is too large</source>
             <translation>模型回應過大</translation>
         </message>
-        <message>
+<message>
+      <source>The model returned no answer</source>
+      <translation>模型未傳回答案</translation>
+    </message>
+<message>
             <source>The model returned no content</source>
             <translation>模型未傳回內容</translation>
         </message>
-        <message>
+<message>
             <source>The text is too large to translate.</source>
             <translation>文字過長，無法翻譯。</translation>
         </message>
-        <message>
+<message>
             <source>The translation response is too large.</source>
             <translation>翻譯回應過大。</translation>
         </message>
-        <message>
+<message>
             <source>This service does not support the selected language combination.</source>
             <translation>此服務不支援所選語言組合。</translation>
         </message>
-        <message>
+<message>
             <source>Translation failed</source>
             <translation>翻譯失敗</translation>
         </message>
-        <message>
+<message>
             <source>Translation request timed out.</source>
             <translation>翻譯請求逾時。</translation>
         </message>
-        <message>
+<message>
             <source>Translation service request failed (HTTP %1, code %2).</source>
             <translation>翻譯服務請求失敗（HTTP %1，代碼 %2）。</translation>
         </message>
-        <message>
+<message>
             <source>Translation service response is too large</source>
             <translation>翻譯服務回應過大</translation>
         </message>
-        <message>
+<message>
             <source>Translation stream ended unexpectedly</source>
             <translation>翻譯串流意外結束</translation>
         </message>
-    </context>
+        </context>
     <context>
         <name>SystemTrayController</name>
         <message>

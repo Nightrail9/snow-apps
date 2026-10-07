@@ -99,11 +99,14 @@
     "ScreenshotTableEditor"
   ],
   "translation": [
+    "ScreenshotQuestionAnswerSession",
+    "ScreenshotQuestionAnswerWidget",
     "ScreenshotTranslationSettingsDialog",
     "TranslationLanguages",
     "TranslationPageWidget",
     "TranslationService",
     "snow_shot::presentation::StandaloneTranslationWindow",
+    "snow_shot::presentation::StandaloneScreenshotQuestionAnswerWindow",
     "snow_shot::presentation::TranslationPageController",
     "snow_shot::translation::TranslationJob",
     "snow_shot::translation::TranslationService"

@@ -109,6 +109,7 @@ enum class SettingsSelectBinding {
     TranslationPrimaryTargetLanguage,
     TranslationSecondaryTargetLanguage,
     TranslationService,
+    ScreenshotQaPresentation,
     ScreenshotSelectionResizeMode,
     SkinDisplayMode,
     SkinPosition,
@@ -515,6 +516,7 @@ enum class SettingsPageKind {
     PinnedWindowManagement,
     About,
     Translation,
+    ScreenshotQuestionAnswer,
 };
 
 // Links share the canonical destination instead of duplicating controls or state.

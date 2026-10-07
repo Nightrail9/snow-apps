@@ -7,6 +7,10 @@
 #include "snow_shot/presentation/components/translationpagewidget.h"
 #endif
 #include "snow_shot/presentation/components/settingspagewidget.h"
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+#include "snow_shot/presentation/components/screenshotquestionanswerwidget.h"
+#include "snow_shot/presentation/screenshotquestionanswersession.h"
+#endif
 #include "snow_shot/presentation/components/screenshothistorypagewidget.h"
 #include "snow_shot/presentation/components/pinnedwindowmanagementpagewidget.h"
 #include "snow_shot/presentation/settings/settingsregistry.h"
@@ -184,6 +188,14 @@ QWidget* ContentCardWidget::createPage(
         page = translationPage;
 #endif
 
+    } else if (definition.kind == snow_shot::presentation::settings::SettingsPageKind::ScreenshotQuestionAnswer) {
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+        auto* questionAnswer = new ScreenshotQuestionAnswerWidget(m_questionAnswerSession, m_stack);
+        connect(questionAnswer, &ScreenshotQuestionAnswerWidget::modelSettingsRequested, this,
+                &ContentCardWidget::screenshotQuestionAnswerModelSettingsRequested);
+        page = questionAnswer;
+#endif
+
     } else if (definition.kind == snow_shot::presentation::settings::SettingsPageKind::About) {
         page = new AboutPageWidget(m_stack);
     } else {
@@ -260,6 +272,22 @@ void ContentCardWidget::showTranslation(const QString& text) {
     }
 #else
     Q_UNUSED(text);
+#endif
+}
+
+void ContentCardWidget::setScreenshotQuestionAnswerSession(
+    ScreenshotQuestionAnswerSession* session) {
+    m_questionAnswerSession = session;
+}
+
+void ContentCardWidget::showScreenshotQuestionAnswer(QImage image) {
+#if SNOW_SHOT_ENABLE_API_CONFIGURATION
+    if (m_questionAnswerSession == nullptr || image.isNull())
+        return;
+    m_questionAnswerSession->begin(std::move(image));
+    navigateTo({QStringLiteral("screenshot-question-answer"), {}, {}});
+#else
+    Q_UNUSED(image);
 #endif
 }
 

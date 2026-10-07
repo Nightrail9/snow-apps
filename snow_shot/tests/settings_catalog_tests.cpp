@@ -310,7 +310,7 @@ void builtInCatalogIsCompleteAndValid() {
     const auto* extendedTranslation = catalog.section(
         QStringLiteral("text-recognition-translation"), QStringLiteral("translation"));
     require(jumpToggle != nullptr && extendedTranslation != nullptr &&
-                extendedTranslation->items.size() == 3 &&
+                extendedTranslation->items.size() == 4 &&
                 extendedTranslation->items.at(1).id == jumpToggle->id &&
                 jumpToggle->title.translated() == QStringLiteral("Jump to Translation Page") &&
                 jumpToggle->configurationKey ==
@@ -320,6 +320,23 @@ void builtInCatalogIsCompleteAndValid() {
                 !snow_shot::storage::ConfigurationSchema::defaultValue(jumpToggle->configurationKey)
                      .toBool(true),
             "OCR translation jump exposes an ordered persisted default-off switch");
+    const auto* qaPresentation =
+        catalog.item({QStringLiteral("text-recognition-translation"),
+                      QStringLiteral("translation"),
+                      QStringLiteral("extended-features.screenshot-qa-presentation")});
+    require(qaPresentation &&
+                qaPresentation->title.translated() ==
+                    QStringLiteral("Screenshot Q&A Opening Mode") &&
+                qaPresentation->configurationKey ==
+                    QStringLiteral("extended_features/screenshot_qa_presentation") &&
+                snow_shot::storage::ConfigurationSchema::defaultValue(
+                    qaPresentation->configurationKey)
+                        .toString() == QStringLiteral("main_page") &&
+                std::get<settings::SettingsSelectDefinition>(qaPresentation->payload).binding ==
+                    settings::SettingsSelectBinding::ScreenshotQaPresentation &&
+                std::get<settings::SettingsSelectDefinition>(qaPresentation->payload).options.size() ==
+                    2,
+            "screenshot Q&A exposes a persisted main-page or standalone-window choice");
     const auto* standaloneToggle =
         catalog.item({QStringLiteral("text-recognition-translation"), QStringLiteral("translation"),
                       QStringLiteral("extended-features.standalone-translation-window")});

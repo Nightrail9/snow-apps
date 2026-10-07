@@ -153,6 +153,25 @@ void selectedTextShortcutSettings() {
             QStringLiteral("extended-features.standalone-translation-window");
         const auto jumpBinding = settings::SettingsSwitchBinding::JumpToTranslationPage;
         const QString jumpId = QStringLiteral("extended-features.jump-to-translation-page");
+        const auto qaPresentationBinding = settings::SettingsSelectBinding::ScreenshotQaPresentation;
+        const QString qaPresentationId =
+            QStringLiteral("extended-features.screenshot-qa-presentation");
+        require(storage::ExtendedFeaturesSettings().screenshotQaPresentation() ==
+                    QStringLiteral("main_page") &&
+                    session.state(qaPresentationId).visible &&
+                    session.state(qaPresentationId).acceptedValue.toString() ==
+                        QStringLiteral("main_page"),
+                "screenshot Q&A opening mode defaults to the main page");
+        require(backend.applySelectValue(qaPresentationBinding,
+                                         QStringLiteral("standalone_window")) &&
+                    storage::ExtendedFeaturesSettings().screenshotQaPresentation() ==
+                        QStringLiteral("standalone_window") &&
+                    !backend.applySelectValue(qaPresentationBinding, QStringLiteral("invalid")) &&
+                    storage::ExtendedFeaturesSettings().screenshotQaPresentation() ==
+                        QStringLiteral("standalone_window"),
+                "screenshot Q&A opening mode persists supported values and rejects unknown ones");
+        require(backend.applySelectValue(qaPresentationBinding, QStringLiteral("main_page")),
+                "restore default screenshot Q&A opening mode");
         require(!storage::ExtendedFeaturesSettings().standaloneTranslationWindow() &&
                     session.state(standaloneId).visible && !session.state(standaloneId).enabled &&
                     !backend.applySwitchValue(standaloneBinding, true),

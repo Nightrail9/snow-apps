@@ -891,6 +891,9 @@ set(SNOW_SHOT_SETTINGS_SOURCES
     include/snow_shot/presentation/components/sectionheaderwidget.h
     include/snow_shot/presentation/components/confirmationskipbutton.h
     include/snow_shot/presentation/components/screenshothistorypagewidget.h
+    include/snow_shot/presentation/components/screenshotquestionanswerwidget.h
+    include/snow_shot/presentation/components/standalonescreenshotquestionanswerwindow.h
+    include/snow_shot/presentation/screenshotquestionanswersession.h
     include/snow_shot/presentation/components/emptystateicon.h
     include/snow_shot/presentation/components/texttranslationsettingswidget.h
     include/snow_shot/presentation/components/customaimodelssettingswidget.h
@@ -1481,6 +1484,12 @@ set(PROJECT_CXX_SOURCES
     src/presentation/recording/screenrecordinggeometry.cpp
     src/presentation/recording/screenrecordingtoolbarwindow.cpp
 )
+if(SNOW_SHOT_ENABLE_API_CONFIGURATION)
+    list(APPEND PROJECT_CXX_SOURCES
+        src/presentation/components/screenshotquestionanswerwidget.cpp
+        src/presentation/components/standalonescreenshotquestionanswerwindow.cpp
+        src/presentation/services/screenshotquestionanswersession.cpp)
+endif()
 if(APPLE)
     list(APPEND PROJECT_CXX_SOURCES
         src/platform/macos/applicationactivation.mm

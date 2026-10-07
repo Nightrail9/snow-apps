@@ -108,6 +108,10 @@
             <translation>箭头描边宽度 %1</translation>
         </message>
         <message>
+            <source>Ask AI about screenshot</source>
+            <translation>询问 AI 关于截图</translation>
+        </message>
+        <message>
             <source>Auto Filter</source>
             <translation>自动滤镜</translation>
         </message>

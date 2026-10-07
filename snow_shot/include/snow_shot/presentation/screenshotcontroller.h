@@ -132,6 +132,7 @@ class ScreenshotController : public QObject {
     void showMainWindowRequested();
     void accessibilityPermissionRequested();
     void translationPageRequested(const QString& text);
+    void screenshotQuestionAnswerRequested(const QImage& image);
     void captureAvailabilityChanged(bool available);
     void globalMouseCaptureEnded(quint64 gestureId);
     void mcpCapturePresented();

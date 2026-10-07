@@ -3817,6 +3817,22 @@
             <translation>堆叠截图工具</translation>
         </message>
         <message>
+            <source>Screenshot Q&amp;A Opening Mode</source>
+            <translation>截图问答打开方式</translation>
+        </message>
+        <message>
+            <source>Choose whether screenshot Q&amp;A opens in the main window or a standalone window.</source>
+            <translation>选择在主窗口还是独立窗口中打开截图问答。</translation>
+        </message>
+        <message>
+            <source>Main Window Page</source>
+            <translation>主窗口页面</translation>
+        </message>
+        <message>
+            <source>Standalone Window</source>
+            <translation>独立窗口</translation>
+        </message>
+        <message>
             <source>Standalone Translation Window</source>
             <translation>独立翻译窗口</translation>
         </message>
@@ -4252,7 +4268,15 @@
             <source>Zip archives (*.zip);;All files (*.*)</source>
             <translation>Zip 压缩包 (*.zip);;所有文件 (*.*)</translation>
         </message>
-    </context>
+            <message>
+            <source>Screenshot Q&amp;A</source>
+            <translation>截图问答</translation>
+        </message>
+        <message>
+            <source>Ask questions about screenshots with a vision model</source>
+            <translation>使用视觉模型询问截图内容</translation>
+        </message>
+</context>
     <context>
         <name>SettingsPageWidget</name>
         <message>

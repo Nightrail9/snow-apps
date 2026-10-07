@@ -2,6 +2,72 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_TW" sourcelanguage="en_US">
     <context>
+    <name>ScreenshotQuestionAnswerSession</name>
+    <message>
+        <source>Could not start the AI question request.</source>
+        <translation>無法啟動 AI 問答請求。</translation>
+    </message>
+    <message>
+        <source>The selected vision model is no longer available.</source>
+        <translation>所選視覺模型已無法使用。</translation>
+    </message>
+    </context>
+    <context>
+    <name>ScreenshotQuestionAnswerWidget</name>
+    <message>
+        <source>Ask about this screenshot</source>
+        <translation>詢問此螢幕擷取畫面</translation>
+    </message>
+    <message>
+        <source>Vision model</source>
+        <translation>視覺模型</translation>
+    </message>
+    <message>
+        <source>The screenshot and your questions are sent to the selected model provider.</source>
+        <translation>螢幕擷取畫面和你的問題會傳送給所選模型服務商。</translation>
+    </message>
+    <message>
+        <source>Your conversation will appear here.</source>
+        <translation>對話會顯示在這裡。</translation>
+    </message>
+    <message>
+        <source>Ask a question about the screenshot…</source>
+        <translation>詢問有關此螢幕擷取畫面的問題…</translation>
+    </message>
+    <message>
+        <source>Configure vision models</source>
+        <translation>設定視覺模型</translation>
+    </message>
+    <message>
+        <source>New conversation</source>
+        <translation>新增對話</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>停止</translation>
+    </message>
+    <message>
+        <source>Ask</source>
+        <translation>提問</translation>
+    </message>
+    <message>
+        <source>You</source>
+        <translation>你</translation>
+    </message>
+    <message>
+        <source>AI</source>
+        <translation>AI</translation>
+    </message>
+    <message>
+        <source>Take a screenshot and choose Ask AI to start a conversation.</source>
+        <translation>擷取畫面後選擇「詢問 AI」以開始對話。</translation>
+    </message>
+    <message>
+        <source>Add an OpenAI-compatible model with Vision Support enabled.</source>
+        <translation>新增一個已啟用視覺支援的 OpenAI 相容模型。</translation>
+    </message>
+    </context>
+    <context>
         <name>ScreenshotTranslationSettingsDialog</name>
         <message>
             <source>Cancel</source>
@@ -184,6 +250,13 @@
             <source>Translation Models</source>
             <translation>翻譯模型</translation>
         </message>
+    </context>
+    <context>
+    <name>snow_shot::presentation::StandaloneScreenshotQuestionAnswerWindow</name>
+    <message>
+        <source>Screenshot Q&amp;A</source>
+        <translation>截圖問答</translation>
+    </message>
     </context>
     <context>
         <name>snow_shot::presentation::StandaloneTranslationWindow</name>

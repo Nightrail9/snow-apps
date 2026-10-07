@@ -37,6 +37,8 @@ class ExtendedFeaturesSettings final {
     bool setJumpToTranslationPage(bool enabled) const;
     [[nodiscard]] bool standaloneTranslationWindow() const;
     bool setStandaloneTranslationWindow(bool enabled) const;
+    [[nodiscard]] QString screenshotQaPresentation() const;
+    bool setScreenshotQaPresentation(const QString& presentation) const;
 };
 #endif
 

@@ -2,6 +2,7 @@
 #define SNOW_SHOT_PRESENTATION_MAINWINDOW_H
 
 #include <QByteArray>
+#include <QImage>
 #include <QMainWindow>
 
 #include "snow_shot/presentation/globalshortcuttypes.h"
@@ -9,6 +10,7 @@
 #include "snow_shot/presentation/windowgeometrymemory.h"
 
 class SnowShotApiClient;
+class ScreenshotQuestionAnswerSession;
 class QCloseEvent;
 class QEvent;
 class QResizeEvent;
@@ -45,6 +47,8 @@ class MainWindow : public QMainWindow {
     void showScreenshotHistory();
     void showPinToScreenManagement();
     void showTranslation(const QString& text);
+    void setScreenshotQuestionAnswerSession(ScreenshotQuestionAnswerSession* session);
+    void showScreenshotQuestionAnswer(QImage image);
 
   signals:
     void screenshotRequested();
